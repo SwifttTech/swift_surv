@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{env('APP_NAME')}} | {{$title}}</title>
+    <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 11]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <meta name="author" content="Phoenixcoded" />
+    <!-- Favicon icon -->
+    <link rel="icon" href="{{url('')}}assets/images/favicon.png" type="image/x-icon">
+
+    <!-- vendor css -->
+    <link rel="stylesheet" href="{{url('')}}assets/css/style.css">
+    <link href="{{url('')}}assets/libs/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="{{ url('') }}assets/css/weza.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+
+  <script src="http://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css"></script>
+  <link href="{{url('')}}assets/libs/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    
+    
+
+</head>
+<body class="">
+    <!-- [ Pre-loader ] start -->
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
+        </div>
+    </div>
+     @include('includes/header')
+    @include('includes/sidebar')
+    
+    
+
+<!-- [ Main Content ] start -->
+<section class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">{{$title}}</h5>
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{url('Dashboard@get')}}"><i class="feather icon-home"></i> Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="#!">{{$title}}</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            <!-- [ basic-table ] start -->
+            <div class="col-md-12">
+        <div class="container-fluid">
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <button class="btn btn-primary btn-icon-split btn-sm" data-toggle="modal" data-target="#addRole"> <span class="icon text-white-50">
+                      <i class="fas fa-plus"></i>
+                    </span> <span class="text">Add a Role</span> </button>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Role Title</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody> @if(!empty($roles))
+                    @foreach($roles as $key => $role)
+                    <tr>
+                      <td>{{$key+1}}</td>
+                      <td>{{$role->title}}</td>
+                      <td>
+                        <a class="btn btn-sm btn-primary" href="{{url('Settings@roleSettings'),$role->id}}"><i class="fa fa-align-justify"></i> View / Edit</a>
+                          <a class="btn btn-sm btn-primary send-to-server-click" data="roleid:{{ $role->id }}|csrf-token:{{csrf_token()}}" href="" url="{{ url('Settings@deleteRole') }}" warning-title="Are you sure?" warning-message="This role will be deleted" warning-button="Delete" loader="true"><i class="fa fa-trash"></i> Delete</a>
+                    </td>
+                    </tr> @endforeach @else
+                    <tr>
+                      <td colspan="6" class="text-center">It's Empty</td>
+                    </tr> @endif </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+            </div>
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+</section>
+
+  <div class="modal fade" id="addRole" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add a Role</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+        </div>
+        <form class="weza-form" action="{{ url('Settings@addRole') }}" method="POST" loader="true">
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Role Title</label>
+              <input type="text" class="form-control" name="title" placeholder="Role Title" data-parsley-required />
+              <input type="hidden" name="csrf-token" value="{{csrf_token()}}"> </div>
+            <div class="form-group">
+              <label>Inherit settings from:</label>
+              <select class="form-control" name="inherit">
+                <option selected="" value="0">Select an existing role</option> @foreach($roles as $role)
+                <option value="{{$role->id}}"> {{ $role->title }}</option> @endforeach </select>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary btn-icon-split btn-sm" data-dismiss="modal"> <span class="icon text-white-50">
+                      <i class="fas fa-times"></i>
+                    </span> <span class="text">Close</span> </button>
+              <button class="btn btn-primary btn-icon-split btn-sm" type="submit"> <span class="icon text-white-50">
+                      <i class="fas fa-save"></i>
+                    </span> <span class="text">Save Changes</span> </button>
+            </div>
+        </form>
+        </div>
+      </div>
+    </div>
+<!-- [ Main Content ] end -->
+    <!-- Warning Section start -->
+    <!-- Older IE warning message -->
+    <!--[if lt IE 11]>
+        <div class="ie-warning">
+            <h1>Warning!!</h1>
+            <p>You are using an outdated version of Internet Explorer, please upgrade
+               <br/>to any of the following web browsers to access this website.
+            </p>
+            <div class="iew-container">
+                <ul class="iew-download">
+                    <li>
+                        <a href="http://www.google.com/chrome/">
+                            <img src="{{url('')}}assets/images/browser/chrome.png" alt="Chrome">
+                            <div>Chrome</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.mozilla.org/en-US/firefox/new/">
+                            <img src="{{url('')}}assets/images/browser/firefox.png" alt="Firefox">
+                            <div>Firefox</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.opera.com">
+                            <img src="{{url('')}}assets/images/browser/opera.png" alt="Opera">
+                            <div>Opera</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.apple.com/safari/">
+                            <img src="{{url('')}}assets/images/browser/safari.png" alt="Safari">
+                            <div>Safari</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+                            <img src="{{url('')}}assets/images/browser/ie.png" alt="">
+                            <div>IE (11 & above)</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <p>Sorry for the inconvenience!</p>
+        </div>
+    <![endif]-->
+    <!-- Warning Section Ends -->
+
+    <!-- Required Js -->
+    <script src="{{url('')}}assets/js/vendor-all.min.js"></script>
+
+  <script src="{{url('')}}assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{url('')}}assets/libs/jquery-easing/jquery.easing.min.js"></script>
+
+  <script src="{{url('')}}assets/libs/datatables/jquery.dataTables.min.js"></script>
+  <script src="{{url('')}}assets/libs/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+
+
+    <!-- Required Js -->
+    <script src="{{url('')}}assets/js/plugins/bootstrap.min.js"></script>
+    <script src="{{url('')}}assets/js/ripple.js"></script>
+    <script src="{{url('')}}assets/js/pcoded.min.js"></script>
+        <script src="{{ url('') }}assets/js/weza.min.js"></script>
+   <script src="{{ url('') }}assets/js/app.js"></script>
+
+  <script src="{{url('')}}assets/js/demo/datatables-demo.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<script type="text/javascript">
+      $('.form_datetime').datetimepicker({
+
+        weekStart: 1,
+
+        todayBtn:  1,
+
+    autoclose: 1,
+
+    todayHighlight: 1,
+
+    startView: 2,
+
+    forceParse: 0,
+
+        showMeridian: 1,
+
+        startDate: "{{date('Y-m-d h:i')}}",
+
+        pickerPosition: 'bottom-right'
+
+    });
+</script>
+<script>
+$(function() {
+  $('input[name="daterange"]').daterangepicker({
+    opens: 'left'
+  }, function(start, end, label) {
+    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+  });
+});
+</script>
+</body>
+
+</html>

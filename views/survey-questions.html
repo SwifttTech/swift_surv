@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{env('APP_NAME')}} | {{$title}}</title>
+    <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 11]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <meta name="author" content="Phoenixcoded" />
+    <!-- Favicon icon -->
+    <link rel="icon" href="{{url('')}}assets/images/favicon.png" type="image/x-icon">
+
+    <!-- vendor css -->
+    <link rel="stylesheet" href="{{url('')}}assets/css/style.css">
+    <link href="{{url('')}}assets/libs/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="{{ url('') }}assets/css/weza.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+  <link href="{{ url('') }}assets/css/weza.css" rel="stylesheet">
+    
+    
+
+</head>
+<body class="">
+    <!-- [ Pre-loader ] start -->
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
+        </div>
+    </div>
+     @include('includes/header')
+    @include('includes/sidebar')
+    
+    
+
+<!-- [ Main Content ] start -->
+<section class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">{{$title}}</h5>
+                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                          Add Question
+                        </button>  
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{url('Dashboard@get')}}"><i class="feather icon-home"></i> Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="#!">{{$title}}</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            <!-- [ basic-table ] start -->
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>{{$title}}</h5>
+                    </div>
+                    
+                    
+                    <div class="card-body table-border-style">
+                        
+                        <div class="card">
+        					<div class="card-body">
+        						<div id="addQuestion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addQuestionCenterTitle" aria-hidden="true">
+        							<div class="modal-dialog modal-dialog-centered" role="document">
+        								<div class="modal-content">
+        									<div class="modal-header">
+        										<h5 class="modal-title" id="exampleModalCenterTitle">Add a Question</h5>
+        										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        									</div>
+        									<div class="modal-body">
+                                                  <form class="weza-form" action="{{ url('Surveys@addQuestion') }}" data-parsley-validate="" method="POST" loader="true">
+                                                    <div class="form-group">
+                                                          <label for="Name">Name</label>
+                                                          <input type="text" class="form-control" id="Name" placeholder="Name e.g Age" name="name" required>
+                                                        </div>
+                                                        <input type="hidden" name="survey" value="{{$id}}">
+                                                        <div class="form-group">
+                                                          <label for="Question">Question</label>
+                                                          <textarea class="form-control" id="question" placeholder="Question" name="question" rows="5" required></textarea> </textarea>
+                                                        </div>
+                                                  <!--      <button type="submit" class="btn btn-block btn-primary text-white mb-4">Save Changes</button>-->
+                                                    
+                                              </div>
+        									<div class="modal-footer">
+        										<button type="button" class="btn  btn-secondary" data-dismiss="modal">Close</button>
+        										<button type="submit" class="btn  btn-primary">Save changes</button>
+        									</div>
+        									</form>
+        								</div>
+        							</div>
+        						</div>
+        						<button type="button" class="btn  btn-primary" data-toggle="modal" data-target="#addQuestion">Add Question</button>
+        					</div>
+        				</div>
+                        
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="dataTable" class="display" style="width:100%">
+                                <thead>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Question</th>
+                                        <th>Characters (SMS)</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($questions as $key => $question)
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$question->name}}</td>
+                                        <td>{{$question->question}}</td>
+                                        <td>{{strlen($question->question)}} ({{ceil(strlen($question->question)/160)}})</td>
+                                        <td>
+                                            <div class="btn-group mb-2 mr-2">
+                    							<button type="button" class="btn  btn-primary">Action</button>
+                    							<button type="button" class="btn  btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+                    							<div class="dropdown-menu">
+                    								<!--<a class="dropdown-item" href="#!">Edit</a>-->
+                    								<!--<a class="dropdown-item" href="#!">Delete</a>-->
+                    								<a class="dropdown-item btn btn-sm btn-primary btn-circle fetch-display-click" data="id:{{ $question->id }}|csrf-token:{{ csrf_token() }}" url="{{url('Surveys@updateQuestionview')}}" holder=".update-holder" modal="#update" href=""><i class="fa fa-edit"></i> Edit
+                                    </a>
+                                    <a class="dropdown-item btn btn-danger btn-circle send-to-server-click" data="id:{{ $question->id }}|csrf-token:{{csrf_token()}}" href="" url="{{ url('Surveys@deleteQuestion') }}" warning-title="Are you sure?" warning-message="This question will be deleted" warning-button="Delete" loader="true"><i class="fa fa-trash"></i> Delete
+                                    </a>
+                    							</div>
+                    						</div>
+                                        </td>
+                                        
+                                        
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+</section>
+
+
+<div class="modal inmodal" id="update" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content animated bounceInRight">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Question.</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="update-holder"></div>
+      </div>
+    </div>
+</div>
+<!--<div id="update" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addQuestionCenterTitle" aria-hidden="true">-->
+<!--	<div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--		<div class="modal-content">-->
+<!--			<div class="modal-header">-->
+<!--				<h5 class="modal-title" id="exampleModalCenterTitle">Edit Question</h5>-->
+<!--				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+<!--			</div>-->
+<!--			<div class="update-holder"></div>-->
+<!--			</form>-->
+<!--		</div>-->
+<!--	</div>-->
+<!--</div>-->
+
+    <!-- Required Js -->
+    <script src="{{url('')}}assets/js/vendor-all.min.js"></script>
+
+  <script src="{{url('')}}assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{url('')}}assets/libs/jquery-easing/jquery.easing.min.js"></script>
+
+  <script src="{{url('')}}assets/libs/datatables/jquery.dataTables.min.js"></script>
+  <script src="{{url('')}}assets/libs/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<!--<script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>-->
+
+
+    <!-- Required Js -->
+    <script src="{{url('')}}assets/js/plugins/bootstrap.min.js"></script>
+    <script src="{{url('')}}assets/js/ripple.js"></script>
+    <script src="{{url('')}}assets/js/pcoded.min.js"></script>
+    
+    <script src="{{ url('') }}assets/js/weza.min.js"></script>
+   <script src="{{ url('') }}assets/js/app.js"></script>
+
+</body>
+
+</html>
+
+    

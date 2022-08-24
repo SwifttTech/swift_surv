@@ -1,0 +1,40 @@
+<link href="{{ url('') }}assets/libs/datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
+<form class="weza-form" action="{{ url('Profile@updateUser') }}" data-parsley-validate="" method="POST" loader="true">
+  <div class="modal-body">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>First Name</label>
+        <input type="text" class="form-control" name="fname" placeholder="First Name" value="{{$employee->fname}}" required="" />
+        <input type="hidden" name="csrf-token" value="{{csrf_token()}}">
+        <input type="hidden" name="id" value="{{$employee->id}}"> </div>
+      <div class="form-group col-md-6">
+        <label>Last Name</label>
+        <input type="text" class="form-control" name="lname" value="{{$employee->lname}}" placeholder="Last Name" /> </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label>Email</label>
+        <input type="email" class="form-control" name="email" placeholder="E-Mail address" value="{{$employee->email}}" required="" /> </div>
+      <div class="form-group col-md-6">
+        <label>Phone</label>
+        <input type="text" class="form-control" name="phone" value="{{$employee->phone}}" placeholder="Phone Number" /> </div>
+    </div>
+    <div class="form-group">
+      <label>User Role</label>
+      <select class="form-control" name="role_id">
+        @foreach($roles as $role)
+        <option value="{{$role->id}}" @if($role->id == $employee->role_id) selected @endif>{{$role->title}}</option>
+      @endforeach
+    </select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary btn-icon-split btn-sm" data-dismiss="modal"> <span class="icon text-white-50">
+                      <i class="fas fa-times"></i>
+                    </span> <span class="text">Close</span> </button>
+    <button class="btn btn-primary btn-icon-split btn-sm" type="submit"> <span class="icon text-white-50">
+                      <i class="fas fa-save"></i>
+                    </span> <span class="text">Save Changes</span> </button>
+  </div>
+</form>
+<script src="{{ url('') }}assets/js/weza.min.js"></script>

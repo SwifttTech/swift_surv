@@ -1,0 +1,72 @@
+  <nav class="pcoded-navbar menu-light ">
+    <div class="navbar-wrapper  ">
+      <div class="navbar-content scroll-div " >
+        
+        <div class="">
+          <div class="main-menu-header">
+            @if( !empty($user->avatar) )
+            <img class="img-radius" src="{{ url('') }}uploads/avatar/{{ $user->avatar }}" alt="User-Profile-Image">
+            @else
+              <img class="img-radius" src="{{url('')}}assets/images/user/avatar-2.jpg" alt="User-Profile-Image">
+            @endif
+
+            <div class="user-details">
+              <div id="more-details">{{$user->fname}} {{$user->lname}} <i class="fa fa-caret-down"></i></div>
+            </div>
+          </div>
+          <div class="collapse" id="nav-user-link">
+            <ul class="list-unstyled">
+              <li class="list-group-item"><a href="{{url('Auth@profile')}}"><i class="feather icon-user m-r-5"></i>View Profile</a></li>
+              <li class="list-group-item"><a href="{{url('Auth@profile')}}"><i class="feather icon-settings m-r-5"></i>Settings</a></li>
+              <li class="list-group-item"><a href="{{url('Auth@signout')}}"><i class="feather icon-log-out m-r-5"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <ul class="nav pcoded-inner-navbar ">
+          <li class="nav-item pcoded-menu-caption">
+              <label>Navigation</label>
+          </li>
+          <li class="nav-item">
+              <a href="{{url('Dashboard@get')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">Dashboard</span></a>
+          </li>
+          @if(isAllowed('viewCampaigns'))
+          <li class="nav-item">
+              <a href="{{url('SMS@campaigns')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-list"></i></span><span class="pcoded-mtext">Campaigns</span></a>
+          </li>
+          @endif
+         @if(isAllowed('viewSurveys'))
+          <li class="nav-item">
+              <a href="{{url('Surveys@get')}}" class="nav-link "><span class="pcoded-micon"><i class="fa fa-list"></i></span><span class="pcoded-mtext">Surveys</span></a>
+          </li>
+          @endif
+          @foreach(Weza\Controllers\Surveys::getSurveys() as $survey)
+              @if(isAllowed('viewSurveys'))
+               <li class="nav-item">
+                  <a href="{{url('')}}survey/responses/{{$survey->id}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-map-pin"></i></span><span class="pcoded-mtext">{{$survey->name}}</span></a>
+              </li>
+              @endif
+            @endforeach        
+          
+          
+
+          <!--<li class="nav-item">-->
+          <!--    <a href="{{url('Responses@sms')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-message-circle"></i></span><span class="pcoded-mtext">All SMS</span></a>-->
+          <!--</li>-->
+            @if(isAllowed('viewUsers'))
+          <li class="nav-item">
+              <a href="{{url('Profile@users')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext">Manage Users</span></a>
+          </li>
+          @endif
+          @if(isAllowed('viewRoles'))
+          <li class="nav-item">
+              <a href="{{url('Settings@roles')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-shield"></i></span><span class="pcoded-mtext">Roles & Permissions</span></a>
+          </li>
+          @endif
+          <li class="nav-item">
+              <a href="{{url('Auth@profile')}}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-settings"></i></span><span class="pcoded-mtext">Settings</span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>

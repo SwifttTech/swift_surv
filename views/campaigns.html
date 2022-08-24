@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{env('APP_NAME')}} | {{$title}}</title>
+    <!-- HTML5 Shim and Respond.js IE11 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 11]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <meta name="author" content="Phoenixcoded" />
+    <!-- Favicon icon -->
+    <link rel="icon" href="{{url('')}}assets/images/favicon.png" type="image/x-icon">
+
+    <!-- vendor css -->
+    <link rel="stylesheet" href="{{url('')}}assets/css/style.css">
+    <link href="{{url('')}}assets/libs/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="{{ url('') }}assets/css/weza.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+
+  <script src="http://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css"></script>
+  <link href="{{url('')}}assets/libs/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    
+ <link href="{{ url('') }}assets/css/weza.css" rel="stylesheet">    
+
+</head>
+<body class="">
+    <!-- [ Pre-loader ] start -->
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
+        </div>
+    </div>
+     @include('includes/header')
+    @include('includes/sidebar')
+    
+    
+
+<!-- [ Main Content ] start -->
+<section class="pcoded-main-container">
+    <div class="pcoded-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">{{$title}}</h5>
+                            
+                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{url('Dashboard@get')}}"><i class="feather icon-home"></i> Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="#!">{{$title}}</a></li>
+                            
+                        </ul>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            <!-- [ basic-table ] start -->
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>{{$title}}</h5>
+                    </div>
+                    <div class="col-md-4 mt-3">
+                        <a type="button" class="btn btn-primary btn-sm" href="{{url('SMS@get')}}">
+                            <i class="fa fa-plus"></i> New Campaign
+                        </a>
+                    </div>
+                    <div class="card-body table-border-style">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="dataTable" class="display" style="width:100%">
+                                <thead>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Sender ID</th>
+                                        <th>Total</th>
+                                        <th>Dispatch at</th>
+                                        <th>Approve Status</th>
+                                        <th>Queue Status</th>
+                                        <th class="text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(isAllowed('viewCampaigns'))
+                                    @foreach($campaigns as $key => $campaign)
+                                    <tr>
+                                        <td>{{$key+1}}</td>
+                                        <td><a href="{{url('SMS@campaignDetails'),$campaign->id}}">{{$campaign->name}}</a></td>
+                                        <td>{{$campaign->sender}}</td>
+                                        <td>{{$campaign->messages[0]->count}}</td>
+                                        <td>{{$campaign->Dispatch_at}}</td>
+                                        @if($campaign->Approved == '1')
+                                        <td><label class="badge badge-light-success">Approved</label></td>
+                                        @else
+                                        <td><label class="badge badge-light-danger">Pending Admin Approval</label></td>
+                                        @endif
+                                        
+                                        @if($campaign->Queued == '1')
+                                        <td><label class="badge badge-light-success">Queued</label></td>
+                                        @else
+                                        <td><label class="badge badge-light-danger">Not Queued</label></td>
+                                        @endif
+                                        <td>
+                                            
+                                            <a class="dropdown-item btn btn-sm btn-primary btn-circle" href="{{url('SMS@campaignDetails'),$campaign->id}}"><i class="fa fa-eye"></i> View </a>
+                                            @if($campaign->Approved == '0')
+                                            @if(isAllowed('approveCampaigns'))
+                                            <a class="dropdown-item btn btn-danger btn-circle send-to-server-click" data="id:{{ $campaign->id }}|csrf-token:{{csrf_token()}}" href="" url="{{ url('SMS@approveCampaign') }}" warning-title="Are you sure?" warning-message="This campaign will be approved" warning-button="Approve" loader="true"><i class="fa fa-check"></i> Approve
+                                            </a>
+                                            @endif
+                                            
+                                            @endif
+                                            @if(isAllowed('deleteCampaigns'))
+                                            <a class="dropdown-item btn btn-danger btn-circle send-to-server-click" data="id:{{ $campaign->id }}|csrf-token:{{csrf_token()}}" href="" url="{{ url('SMS@deleteCampaign') }}" warning-title="Are you sure?" warning-message="This campaign will be deleted" warning-button="Delete" loader="true"><i class="fa fa-trash"></i> Delete
+                                            </a>
+                                            @endif
+                                    </td>
+                                    </tr>
+                                    
+                                    @endforeach
+                                    @else
+                                     <tr>
+                                        <td colspan="7">You don't have enough rights to view this page.</td>
+                                    </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+</section>
+
+
+<div class="modal inmodal" id="update" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content animated bounceInRight">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Survey.</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="update-holder"></div>
+      </div>
+    </div>
+</div>
+
+    <!-- Required Js -->
+    <script src="{{url('')}}assets/js/vendor-all.min.js"></script>
+
+  <script src="{{url('')}}assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{url('')}}assets/libs/jquery-easing/jquery.easing.min.js"></script>
+
+  <script src="{{url('')}}assets/libs/datatables/jquery.dataTables.min.js"></script>
+  <script src="{{url('')}}assets/libs/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+
+
+    <!-- Required Js -->
+    <script src="{{url('')}}assets/js/plugins/bootstrap.min.js"></script>
+    <script src="{{url('')}}assets/js/ripple.js"></script>
+    <script src="{{url('')}}assets/js/pcoded.min.js"></script>
+
+  <script src="{{url('')}}assets/js/demo/datatables-demo.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <script src="{{ url('') }}assets/js/weza.min.js"></script>
+   <script src="{{ url('') }}assets/js/app.js"></script>
+
+<script type="text/javascript">
+      $('.form_datetime').datetimepicker({
+
+        weekStart: 1,
+
+        todayBtn:  1,
+
+    autoclose: 1,
+
+    todayHighlight: 1,
+
+    startView: 2,
+
+    forceParse: 0,
+
+        showMeridian: 1,
+
+        startDate: "{{date('Y-m-d h:i')}}",
+
+        pickerPosition: 'bottom-right'
+
+    });
+</script>
+<script>
+$(function() {
+  $('input[name="daterange"]').daterangepicker({
+    opens: 'left'
+  }, function(start, end, label) {
+    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+  });
+});
+</script>
+</body>
+
+</html>

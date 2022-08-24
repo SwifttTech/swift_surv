@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Register</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="{{url('assets/libs/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css">
+  <link href="{{url('assets/libs/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="{{url('assets/css/sb-admin-2.min.css')}}" rel="stylesheet">
+  <link href="{{ url('assets/css/weza.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="{{url('assets/libs/tel/build/css/intlTelInput.css')}}"> 
+</head>
+
+<body class="bg-gradient-primary">
+
+  <div class="container">
+
+    <div class="card o-hidden border-0 shadow-lg my-5">
+      <div class="card-body p-0">
+        <!-- Nested Row within Card Body -->
+        <div class="row">
+          <div class="col-lg-5 d-none d-lg-block" style="background:url('{{url('')}}assets/images/sms_sent.svg');background-position: center;
+  background-size: cover;"></div>
+          <div class="col-lg-7">
+            <div class="p-5">
+              <div class="text-center">
+                <img class="text-center" src="{{url('')}}assets/images/logo.png"/>
+                    <hr>
+                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+              </div>
+              <form class="weza-form" action="{{ url('Auth@signup') }}" data-parsley-validate="" loader="true" method="POST">
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="text" class="form-control form-control-user" name="fname" id="fname" placeholder="First Name" data-parsley-required="true">
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control form-control-user" name="lname" id="lname" placeholder="Last Name" data-parsley-required="true">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <!-- <input type="tel" class="form-control form-control-user" id="phone" name="phone" placeholder="Phone Number" data-parsley-required="true"> -->
+                  <input type="tel" id="demo" name="phone"  placeholder="+254721xxxxxx" value="+254" class="form-control"/>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control form-control-user" name="company_name" id="company-name" placeholder="Company Name" data-parsley-required="true">
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control form-control-user" name="company_address" id="company-address" placeholder="Company Address" data-parsley-required="true">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Email Address" data-parsley-required="true">
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                    <!-- <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password"> -->
+                    <input type="password" class="form-control form-control-user" name="password" data-parsley-required="true" data-parsley-minlength="6" data-parsley-error-message="Password is too short!" id="newPassword" placeholder="New password">
+                  </div>
+                  <div class="col-sm-6">
+                    <!-- <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password"> -->
+                    <input type="password" class="form-control form-control-user" data-parsley-required="true" data-parsley-equalto="#newPassword" data-parsley-error-message="Passwords don't Match!" placeholder="Confirm password">
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-user btn-block">
+                  Register Account
+                </button>
+                <hr>
+                <!-- <a href="index.html" class="btn btn-google btn-user btn-block">
+                  <i class="fab fa-google fa-fw"></i> Register with Google
+                </a>
+                <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                  <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
+                </a> -->
+              </form>
+              <hr>
+              <div class="text-center">
+                <a class="small" href="{{url('Auth@forgot_password_view')}}">Forgot Password?</a>
+              </div>
+              <div class="text-center">
+                <a class="small" href="{{url('Auth@get')}}">Already have an account? Login!</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{url('assets/libs/jquery/jquery.min.js')}}"></script>
+  <script src="{{url('assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{url('assets/libs/jquery-easing/jquery.easing.min.js')}}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{{url('assets/js/sb-admin-2.min.js')}}"></script>
+  <script src="{{ url('assets/js/weza.min.js') }}"></script>
+  <script src="{{ url('assets/js/app.js') }}"></script>
+  <script src="{{url('assets/libs/tel/build/js/intlTelInput.js')}}"></script>
+  <script type="text/javascript">
+    $("#demo").intlTelInput({
+        initialCountry: "auto",
+        preferredCountries: ['ke', 'ug','tz','mw','zm'],
+        geoIpLookup: function(callback) {
+          $.get('http://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+            var countryCode = (resp && resp.country) ? resp.country : "";
+            callback(countryCode);
+          });
+        },
+        utilsScript: "{{url('assets/libs/tel/build/js/utils.js')}}" // just for formatting/placeholders etc
+      });
+
+      $.getJSON('http://api.ipstack.com/41.212.59.89?access_key=fc3408397a95252b04cf5c15144cb209', function(data) {
+        console.log(JSON.stringify(data, null, 2));
+        var country = JSON.stringify(data, null, 2);
+        $('#country_code').val(data.country_code);
+        $('#country_names').val(data.country_name);
+      });
+  </script>
+</body>
+
+</html>

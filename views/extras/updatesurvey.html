@@ -1,0 +1,29 @@
+<div class="modal-body">
+      <form class="weza-form" action="{{ url('Surveys@updateSurvey') }}" data-parsley-validate="" method="POST" loader="true">
+        <div class="modal-body">
+          <div class="form-group">
+              <label for="Name">Name</label>
+              <input type="text" class="form-control" value="{{$survey->name}}" id="Name" placeholder="Name e.g Age" name="name" required>
+            </div>
+             <div class="form-group">
+              <label for="Keyword">Keyword</label>
+              <input type="text" class="form-control" value="{{$survey->keyword}}" id="Keyword" placeholder="Keyword" name="keyword" required>
+            </div>
+            <div class="form-group">
+              <label for="Status">Status</label>
+              <select class="form-control" name="status">
+                  <option value="1" @if($survey->status == '1') selected @endif>Active</option>
+                  <option value="0" @if($survey->status == '0') selected @endif>Inactive</option>
+              </select>
+            </div>
+      </div>
+            <input type="hidden" name="id" value="{{$survey->id}}">
+            
+            <button type="submit" class="btn btn-primary text-white mb-4">Save Changes</button>
+        
+        </div>
+    <!--<div class="modal-footer">-->
+    <!--<button type="button" class="btn  btn-secondary" data-dismiss="modal">Close</button>-->
+    <!--<button type="submit" class="btn  btn-primary">Save changes</button>-->
+    <!--</div>-->
+    </form>

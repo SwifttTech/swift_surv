@@ -1,0 +1,19 @@
+<div class="modal-body">
+      <form class="weza-form" action="{{ url('Surveys@updateQuestion') }}" data-parsley-validate="" method="POST" loader="true">
+        <div class="form-group">
+              <label for="Name">Name</label>
+              <input type="text" class="form-control" id="Name" value="{{$question->name}}" placeholder="Name e.g Age" name="name" required>
+            </div>
+            <input type="hidden" name="id" value="{{$question->id}}">
+            <div class="form-group">
+              <label for="Question">Question</label>
+              <textarea class="form-control" id="question" placeholder="Question" name="question" rows="5" required>{{$question->question}}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary text-white mb-4">Save Changes</button>
+        
+        </div>
+    <!--<div class="modal-footer">-->
+    <!--<button type="button" class="btn  btn-secondary" data-dismiss="modal">Close</button>-->
+    <!--<button type="submit" class="btn  btn-primary">Save changes</button>-->
+    <!--</div>-->
+    </form>

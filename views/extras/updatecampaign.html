@@ -1,0 +1,15 @@
+<div class="modal-body">
+      <form class="weza-form" action="{{ url('Surveys@updateCampaign') }}" data-parsley-validate="" method="POST" loader="true">
+        <div class="form-group">
+              <label for="CampaignID">Campaign ID</label>
+              <input type="number" class="form-control" id="campaign_id" value="{{$campaign->campaign_id}}" placeholder="Campaign ID" name="campaign_id" required>
+            </div>
+            <input type="hidden" name="id" value="{{$campaign->id}}">
+            <button type="submit" class="btn btn-primary text-white mb-4">Save Changes</button>
+        
+        </div>
+    <!--<div class="modal-footer">-->
+    <!--<button type="button" class="btn  btn-secondary" data-dismiss="modal">Close</button>-->
+    <!--<button type="submit" class="btn  btn-primary">Save changes</button>-->
+    <!--</div>-->
+    </form>
